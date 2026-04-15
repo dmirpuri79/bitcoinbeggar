@@ -1,0 +1,42 @@
+{
+  "name": "bitcoinbeggar",
+  "version": "1.0.0",
+  "description": "Bitcoin Beggar automatic throne flow with Netlify Functions and Supabase.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "postinstall": "echo '✅ BitcoinBeggar dependencies installed'",
+    "test": "vitest run --dir tests",
+    "test:watch": "vitest --dir tests",
+    "dev:netlify": "netlify dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dmirpuri79/bitcoinbeggar.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dmirpuri79/bitcoinbeggar/issues"
+  },
+  "homepage": "https://github.com/dmirpuri79/bitcoinbeggar#readme",
+  "dependencies": {
+    "@askjo/camofox-browser": "^1.5.2",
+    "@netlify/functions": "^2.8.2",
+    "@supabase/supabase-js": "^2.49.1",
+    "agent-browser": "^0.13.0",
+    "bip32": "^4.0.0",
+    "bitcoinjs-lib": "^6.1.7",
+    "tiny-secp256k1": "^2.2.3",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.38.1",
+    "vitest": "^3.1.1"
+  },
+  "overrides": {
+    "lodash": "4.18.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bitcoin Beggar</title>
+    <meta
+      name="description"
+      content="The world's first Bitcoin Beggar. Fund the beggar, compete for top donor, and control the sign for 24 hours."
+    />
+    <style>
+      :root {
+        --bg: #050505;
+        --surface: rgba(255, 255, 255, 0.05);
+        --surface-strong: rgba(255, 255, 255, 0.08);
+        --surface-border: rgba(255, 255, 255, 0.12);
+        --text: #f5f5f5;
+        --muted: rgba(255, 255, 255, 0.68);
+        --accent: #f7931a;
+        --accent-strong: #ffaf4d;
+        --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+        --radius-xl: 28px;
+        --radius-lg: 20px;
+        --radius-md: 14px;
+        --max-width: 1120px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top, rgba(247, 147, 26, 0.14), transparent 36%),
+          linear-gradient(180deg, #0a0a0a 0%, #050505 55%, #020202 100%);
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+        background-size: 72px 72px;
+        mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
+        opacity: 0.3;
+      }
+
+      .page {
+        position: relative;
+        z-index: 1;
+        width: min(calc(100% - 32px), var(--max-width));
+        margin: 0 auto;
+        padding: 28px 0 64px;
+      }
+
+      .hero {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 32px 0 40px;
+      }
+
+      .hero-panel {
+        width: 100%;
+        padding: 32px;
+        border: 1px solid var(--surface-border);
+        border-radius: calc(var(--radius-xl) + 6px);
+        background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+        backdrop-filter: blur(20px);
+        box-shadow: var(--shadow);
+        text-align: center;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: rgba(247, 147, 26, 0.12);
+        color: var(--accent-strong);
+        font-size: 0.82rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        margin-top: 24px;
+        font-size: clamp(3rem, 7vw, 6.4rem);
+        line-height: 0.94;
+        letter-spacing: -0.05em;
+      }
+
+      .subtext {
+        width: min(100%, 720px);
+        margin: 22px auto 0;
+        font-size: clamp(0.98rem, 1.7vw, 1.18rem);
+        line-height: 1.65;
+        color: var(--muted);
+      }
+
+      .hero-actions {
+        margin-top: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 14px;
+      }
+
+      .button,
+      .ghost-button {
+        border: 0;
+        border-radius: 999px;
+        padding: 16px 24px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      }
+
+      .button {
+        background: linear-gradient(135deg, var(--accent), #ffb04f);
+        color: #111;
+        box-shadow: 0 16px 38px rgba(247, 147, 26, 0.25);
+      }
+
+      .button:hover,
+      .ghost-button:hover,
+      .copy-button:hover {
+        transform: translateY(-1px);
+      }
+
+      .ghost-button {
+        background: rgba(255,255,255,0.06);
+        color: var(--text);
+        border: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .hero-grid {
+        margin-top: 34px;
+        display: grid;
+        grid-template-columns: minmax(360px, 1.15fr) minmax(0, 0.85fr);
+        gap: 18px;
+        align-items: stretch;
+      }
+
+      .counter {
+        margin: 0;
+        max-width: none;
+        padding: 18px 18px;
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.04);
+      }
+
+      .throne-card {
+        padding: 34px 32px 36px;
+        border-radius: var(--radius-xl);
+        border: 1px solid rgba(247, 147, 26, 0.42);
+        background: linear-gradient(180deg, rgba(247, 147, 26, 0.14), rgba(255,255,255,0.03));
+        box-shadow: 0 0 0 1px rgba(247,147,26,0.12), 0 28px 72px rgba(247,147,26,0.12), var(--shadow);
+        text-align: left;
+      }
+
+      .throne-label,
+      .countdown-label,
+      .feed-label {
+        display: block;
+        font-size: 0.8rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.56);
+      }
+
+      .throne-title {
+        margin-top: 8px;
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        line-height: 0.92;
+        letter-spacing: -0.05em;
+      }
+
+      .throne-value {
+        margin-top: 22px;
+        font-size: 1.48rem;
+        font-weight: 700;
+      }
+
+      .sovereign-strip {
+        margin-top: 20px;
+        padding: 16px 18px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, rgba(247,147,26,0.18), rgba(255,255,255,0.06));
+        border: 1px solid rgba(247,147,26,0.28);
+      }
+
+      .sovereign-label {
+        display: block;
+        font-size: 0.76rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.62);
+      }
+
+      .sovereign-name {
+        margin-top: 8px;
+        font-size: 1.12rem;
+        font-weight: 800;
+      }
+
+      .sovereign-amount {
+        margin-top: 6px;
+        font-size: clamp(1.8rem, 4vw, 2.6rem);
+        line-height: 0.98;
+        letter-spacing: -0.05em;
+        font-weight: 900;
+        color: #fff;
+      }
+
+      .throne-meta {
+        margin-top: 14px;
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .crown-row {
+        margin-top: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+      }
+
+      .crown-chip {
+        padding: 12px 14px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(247,147,26,0.16);
+        font-size: 0.95rem;
+        font-weight: 700;
+      }
+
+      .value-strip {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .value-pill {
+        padding: 10px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.04);
+        color: rgba(255,255,255,0.84);
+        font-size: 0.92rem;
+        font-weight: 600;
+      }
+
+      .counter-label {
+        display: block;
+        font-size: 0.84rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.54);
+      }
+
+      .counter-value {
+        display: block;
+        margin-top: 8px;
+        font-size: clamp(1.6rem, 4vw, 2.35rem);
+        font-weight: 800;
+        letter-spacing: -0.04em;
+      }
+
+      .wallet-panel {
+        display: none;
+        width: min(100%, 760px);
+        margin: 24px auto 0;
+        padding: 20px;
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(247, 147, 26, 0.35);
+        background: rgba(247, 147, 26, 0.07);
+        text-align: left;
+      }
+
+      .wallet-panel.visible {
+        display: block;
+      }
+
+      .wallet-layout {
+        margin-top: 14px;
+        display: grid;
+        grid-template-columns: 180px minmax(0, 1fr);
+        gap: 18px;
+        align-items: center;
+      }
+
+      .qr-shell {
+        display: grid;
+        place-items: center;
+        padding: 14px;
+        border-radius: 20px;
+        background: #fff;
+        min-height: 180px;
+      }
+
+      .qr-code {
+        width: 152px;
+        height: 152px;
+      }
+
+      .qr-code img,
+      .qr-code canvas {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+      }
+
+      .wallet-heading {
+        font-size: 0.84rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent-strong);
+      }
+
+      .wallet-row {
+        margin-top: 12px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .wallet-address {
+        flex: 1 1 420px;
+        min-width: 0;
+        width: 100%;
+        padding: 16px 18px;
+        border-radius: var(--radius-md);
+        background: rgba(0,0,0,0.36);
+        border: 1px solid rgba(255,255,255,0.08);
+        color: #fff;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        font-family: inherit;
+      }
+
+      .wallet-address:focus {
+        outline: 1px solid rgba(247, 147, 26, 0.65);
+        outline-offset: 2px;
+      }
+
+      .copy-button {
+        border: 0;
+        min-width: 144px;
+        padding: 15px 18px;
+        border-radius: var(--radius-md);
+        background: #fff;
+        color: #000;
+        font-weight: 800;
+        cursor: pointer;
+        transition: transform 0.18s ease, opacity 0.18s ease;
+      }
+
+      .wallet-note,
+      .status-note {
+        margin-top: 12px;
+        font-size: 0.95rem;
+        color: var(--muted);
+      }
+
+      .status-note {
+        min-height: 1.4em;
+        color: var(--accent-strong);
+      }
+
+      .manifesto-line {
+        margin-top: 18px;
+        font-size: 1rem;
+        color: rgba(255,255,255,0.84);
+      }
+
+      .countdown-card,
+      .feed-card {
+        padding: 24px 26px;
+        border-radius: var(--radius-xl);
+        background: var(--surface);
+        border: 1px solid var(--surface-border);
+        box-shadow: var(--shadow);
+        text-align: left;
+      }
+
+      .countdown-value {
+        margin-top: 10px;
+        font-size: clamp(1.8rem, 4vw, 2.8rem);
+        font-weight: 800;
+        letter-spacing: -0.05em;
+      }
+
+      .countdown-note {
+        margin-top: 8px;
+        color: var(--muted);
+      }
+
+      .feed-list {
+        margin-top: 14px;
+        display: grid;
+        gap: 10px;
+        font-family: "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+        font-size: 0.9rem;
+      }
+
+      .feed-item {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        color: rgba(255,255,255,0.82);
+      }
+
+      .feed-item:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .feed-time {
+        color: rgba(255,255,255,0.44);
+        white-space: nowrap;
+      }
+
+      .sections {
+        display: grid;
+        gap: 18px;
+        margin-top: -80px;
+      }
+
+      .section-card {
+        padding: 28px;
+        border-radius: var(--radius-xl);
+        background: var(--surface);
+        border: 1px solid var(--surface-border);
+        box-shadow: var(--shadow);
+        text-align: center;
+      }
+
+      .section-card h2 {
+        font-size: clamp(1.6rem, 3vw, 2.4rem);
+        letter-spacing: -0.04em;
+      }
+
+      .section-card p {
+        margin-top: 12px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .leaderboard-value,
+      .sign-value {
+        margin-top: 18px;
+        padding: 18px 20px;
+        border-radius: var(--radius-lg);
+        background: var(--surface-strong);
+        border: 1px solid rgba(255,255,255,0.08);
+        font-size: clamp(1.12rem, 2vw, 1.3rem);
+        font-weight: 700;
+      }
+
+      .leaderboard-meta {
+        margin-top: 8px;
+        font-size: 0.95rem;
+        color: rgba(255,255,255,0.54);
+      }
+
+      .proof-copy {
+        max-width: 760px;
+        margin: 14px auto 0;
+      }
+
+      .evidence-block {
+        display: grid;
+        gap: 12px;
+        width: min(100%, 560px);
+        margin-top: 10px;
+        padding: 18px 2px 0;
+        border-top: 1px solid rgba(255,255,255,0.06);
+      }
+
+      .evidence-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.42);
+      }
+
+      .evidence-copy {
+        max-width: 520px;
+        font-size: 0.95rem;
+        line-height: 1.7;
+        color: rgba(255,255,255,0.42);
+      }
+
+      .evidence-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0;
+      }
+
+      .evidence-link {
+        display: inline-flex;
+        align-items: center;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: rgba(255,255,255,0.82);
+        font: inherit;
+        font-size: 0.98rem;
+        letter-spacing: -0.02em;
+        text-decoration: none;
+        cursor: pointer;
+        transition: color 0.18s ease, transform 0.18s ease;
+      }
+
+      .evidence-link:not(:last-child)::after {
+        content: '·';
+        margin: 0 10px;
+        color: rgba(255,255,255,0.28);
+      }
+
+      .evidence-link:hover,
+      .evidence-link:focus-visible {
+        color: #fff;
+        transform: translateY(-1px);
+      }
+
+      .evidence-link:focus-visible {
+        outline: 1px solid rgba(255,255,255,0.22);
+        outline-offset: 6px;
+      }
+
+
+      .claim-form {
+        margin-top: 14px;
+      }
+
+      .claim-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .claim-field {
+        display: grid;
+        gap: 8px;
+        text-align: left;
+      }
+
+      .claim-field span {
+        font-size: 0.8rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.56);
+      }
+
+      .claim-field-full {
+        grid-column: 1 / -1;
+      }
+
+      .claim-input {
+        width: 100%;
+        padding: 15px 16px;
+        border-radius: var(--radius-md);
+        border: 1px solid rgba(255,255,255,0.1);
+        background: rgba(0,0,0,0.36);
+        color: #fff;
+        font: inherit;
+      }
+
+      .claim-input::placeholder {
+        color: rgba(255,255,255,0.34);
+      }
+
+      .claim-textarea {
+        min-height: 110px;
+        resize: vertical;
+      }
+
+      .claim-actions {
+        margin-top: 14px;
+        display: flex;
+        justify-content: flex-start;
+      }
+
+      .footer-note {
+        margin-top: 28px;
+        text-align: center;
+        color: rgba(255,255,255,0.45);
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 768px) {
+        .hero-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .page {
+          width: min(calc(100% - 20px), var(--max-width));
+          padding-top: 14px;
+          padding-bottom: 36px;
+        }
+
+        .hero {
+          min-height: auto;
+          padding-top: 24px;
+        }
+
+        .hero-panel,
+        .section-card,
+        .countdown-card,
+        .feed-card,
+        .throne-card {
+          padding: 22px;
+        }
+
+        .hero-actions {
+          flex-direction: column;
+        }
+
+        .button,
+        .ghost-button,
+        .copy-button {
+          width: 100%;
+        }
+
+        .wallet-row {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .wallet-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .qr-shell {
+          max-width: 220px;
+          margin: 0 auto;
+        }
+
+        .crown-row,
+        .feed-item {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .sections {
+          margin-top: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <div class="hero-panel">
+          <div class="eyebrow">Bitcoin Beggar • Public Art for Bitcoin Maximalists</div>
+          <h1>The World’s First Bitcoin Beggar</h1>
+          <p class="subtext">A clean, shameless public experiment to collect 21 BTC before the next bull run — and crown the donor with the most taste, conviction, and audacity.</p>
+
+          <div class="hero-grid">
+            <div class="throne-card" id="leaderboard">
+              <span class="throne-label">The Throne</span>
+              <div class="throne-title" id="throneTitle">Awaiting the first sovereign</div>
+              <div class="throne-value" id="throneWallet">Wallet: —</div>
+              <div class="sovereign-strip">
+                <span class="sovereign-label">Current Sovereign</span>
+                <div class="sovereign-name" id="sovereignName">None yet</div>
+                <div class="sovereign-amount" id="sovereignAmount">0.00000000 BTC</div>
+              </div>
+              <div class="throne-meta" id="throneMeta">Amount: 0.00000000 BTC<br />Reward: public throne, sign control, founding status</div>
+              <div class="crown-row">
+                <div class="crown-chip">Beat the top donor to take the crown</div>
+                <div class="crown-chip">Founding donor status is still available</div>
+              </div>
+
+              <div class="hero-actions">
+                <button class="button" id="fundButton">Take the Throne</button>
+                <button class="ghost-button" id="scrollButton">See the Proof</button>
+              </div>
+            </div>
+
+            <div>
+              <div class="counter" aria-label="bitcoin treasury">
+                <span class="counter-label">The Treasury</span>
+                <span class="counter-value" id="treasuryValue">0.00000000 BTC</span>
+              </div>
+
+              <div class="value-strip" aria-label="why donate">
+                <div class="value-pill">Public donor prestige</div>
+                <div class="value-pill">24h sign control</div>
+                <div class="value-pill">A live on-chain artifact of value, ego, and Bitcoin</div>
+              </div>
+
+              <p class="manifesto-line">Some call it absurd. Others understand.</p>
+            </div>
+          </div>
+
+          <div class="wallet-panel" id="walletPanel" aria-live="polite">
+            <div class="wallet-heading">Take the Throne</div>
+            <form class="claim-form" id="claimForm">
+              <div class="claim-grid">
+                <label class="claim-field">
+                  <span>Alias</span>
+                  <input class="claim-input" id="aliasInput" name="alias" type="text" maxlength="60" placeholder="How should the throne know you?" required />
+                </label>
+                <label class="claim-field claim-field-full">
+                  <span>Message</span>
+                  <textarea class="claim-input claim-textarea" id="messageInput" name="message" maxlength="160" placeholder="What should the sign say if you take the throne?" required></textarea>
+                </label>
+              </div>
+              <div class="claim-actions">
+                <button class="button" id="claimSubmitButton" type="submit">Generate Address</button>
+              </div>
+            </form>
+            <div class="wallet-layout" id="claimResult" hidden>
+              <div class="qr-shell"><img class="qr-code" id="qrCodeImage" alt="Bitcoin wallet QR" src="" /></div>
+              <div>
+                <div class="wallet-row">
+                  <input class="wallet-address" id="walletAddress" type="text" readonly value="" />
+                  <button class="copy-button" id="copyButton" type="button">Copy Address</button>
+                </div>
+                <p class="wallet-note" id="walletNote">Each claim gets a unique BTC address. Once payment confirms, the throne updates itself.</p>
+                <div class="status-note" id="statusNote"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sections">
+        <section class="countdown-card">
+          <div class="countdown-value" id="countdownValue">Sign Control Expires In: —</div>
+          <p class="countdown-note" id="countdownNote">The countdown begins with the first confirmed sovereign.</p>
+        </section>
+
+        <section class="section-card">
+          <h2>Biggest donor controls the message for 24 hours.</h2>
+          <p>The sign is the trophy. If you want the internet to see your words on the front of this experiment, outgive everyone else.</p>
+          <div class="sign-value">Current message: “<span id="currentMessage"></span>”</div>
+        </section>
+
+        <section class="feed-card">
+          <span class="feed-label">Recent Transactions</span>
+          <div class="feed-list" id="feedList">
+            <div class="feed-item"><span>No confirmed transactions yet — the first donor writes the opening block.</span><span class="feed-time">Awaiting signal</span></div>
+          </div>
+        </section>
+
+        <section class="section-card">
+          <h2>Proof / Transparency</h2>
+          <p class="proof-copy">All transactions are public. No token. No whitelist. No fake utility. Just a beautifully honest Bitcoin object that rewards the boldest backer with visible status.</p>
+        </section>
+
+        <section class="evidence-block" aria-label="For Those Who Backed It">
+          <div class="evidence-title">For Those Who Backed It</div>
+          <p class="evidence-copy">Quiet evidence for those who were here early.</p>
+          <div class="evidence-links">
+            <a class="evidence-link" data-asset="square" href="#">Square</a>
+            <a class="evidence-link" data-asset="proof" href="#">Proof</a>
+            <a class="evidence-link" data-asset="presence" href="#">Presence</a>
+          </div>
+        </section>
+      </section>
+
+    </main>
+
+        <script>
+      const API_BASE = '/api';
+      const DEFAULT_MESSAGE = 'The sign belongs to whoever makes this impossible to ignore.';
+      const fundButton = document.getElementById('fundButton');
+      const scrollButton = document.getElementById('scrollButton');
+      const walletPanel = document.getElementById('walletPanel');
+      const claimForm = document.getElementById('claimForm');
+      const aliasInput = document.getElementById('aliasInput');
+      const messageInput = document.getElementById('messageInput');
+      const claimSubmitButton = document.getElementById('claimSubmitButton');
+      const claimResult = document.getElementById('claimResult');
+      const walletAddress = document.getElementById('walletAddress');
+      const copyButton = document.getElementById('copyButton');
+      const qrCodeImage = document.getElementById('qrCodeImage');
+      const walletNote = document.getElementById('walletNote');
+      const statusNote = document.getElementById('statusNote');
+      const leaderboard = document.getElementById('leaderboard');
+      const currentMessage = document.getElementById('currentMessage');
+      const assetLinks = document.querySelectorAll('[data-asset]');
+      const throneTitle = document.getElementById('throneTitle');
+      const throneWallet = document.getElementById('throneWallet');
+      const sovereignName = document.getElementById('sovereignName');
+      const sovereignAmount = document.getElementById('sovereignAmount');
+      const throneMeta = document.getElementById('throneMeta');
+      const treasuryValue = document.getElementById('treasuryValue');
+      const countdownValue = document.getElementById('countdownValue');
+      const countdownNote = document.getElementById('countdownNote');
+      const feedList = document.getElementById('feedList');
+
+      let currentClaimId = null;
+      let currentExpiresAt = null;
+      let countdownTimer = null;
+      let claimStatusTimer = null;
+
+      currentMessage.textContent = DEFAULT_MESSAGE;
+
+      const assetSpecs = {
+        square: {
+          fileName: 'bitcoin-beggar-square.svg',
+          width: 1600,
+          height: 1600,
+          headline: 'I backed it.',
+          support: 'Bitcoin Beggar',
+          supportAlign: 'start',
+          supportLetterSpacing: '0.18em'
+        },
+        proof: {
+          fileName: 'bitcoin-beggar-proof.svg',
+          width: 1800,
+          height: 2200,
+          headline: 'On-chain.',
+          support: 'The World’s First Bitcoin Beggar',
+          supportAlign: 'end',
+          supportLetterSpacing: '0.1em'
+        },
+        presence: {
+          fileName: 'bitcoin-beggar-presence.svg',
+          width: 1600,
+          height: 2000,
+          headline: 'I was here.',
+          support: 'bitcoinbeggar.com',
+          supportAlign: 'start',
+          supportLetterSpacing: '0.16em'
+        }
+      };
+
+      function createAssetSvg({ width, height, headline, support, supportAlign, supportLetterSpacing }) {
+        const padX = Math.round(width * 0.095);
+        const headlineY = Math.round(height * 0.5);
+        const supportY = height - Math.round(height * 0.1);
+        const anchor = supportAlign === 'end' ? 'end' : 'start';
+        const supportX = supportAlign === 'end' ? width - padX : padX;
+
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="${headline}">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="0%" r="85%">
+      <stop offset="0%" stop-color="rgba(247, 147, 26, 0.16)" />
+      <stop offset="38%" stop-color="rgba(247, 147, 26, 0.08)" />
+      <stop offset="100%" stop-color="rgba(247, 147, 26, 0)" />
+    </radialGradient>
+    <linearGradient id="wash" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#0a0a0a" />
+      <stop offset="58%" stop-color="#050505" />
+      <stop offset="100%" stop-color="#020202" />
+    </linearGradient>
+    <filter id="soften" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="44" />
+    </filter>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#wash)" />
+  <circle cx="${Math.round(width / 2)}" cy="0" r="${Math.round(width * 0.52)}" fill="url(#glow)" filter="url(#soften)" opacity="0.95" />
+  <text x="${padX}" y="${headlineY}" fill="#f5f5f5" font-family="Inter, Arial, sans-serif" font-size="${Math.round(width * 0.09)}" font-weight="700" letter-spacing="-0.05em">${headline}</text>
+  <text x="${supportX}" y="${supportY}" fill="rgba(255,255,255,0.46)" font-family="Inter, Arial, sans-serif" font-size="${Math.round(width * 0.022)}" font-weight="600" letter-spacing="${supportLetterSpacing}" text-anchor="${anchor}">${support}</text>
+</svg>`.trim();
+      }
+
+      function downloadAsset(assetKey) {
+        const spec = assetSpecs[assetKey];
+        if (!spec) return;
+
+        const svg = createAssetSvg(spec);
+        const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = spec.fileName;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+
+      function formatCountdown(expiresAt) {
+        if (!expiresAt) return 'Sign Control Expires In: —';
+        const remaining = Math.max(0, new Date(expiresAt).getTime() - Date.now());
+        const hours = Math.floor(remaining / 3600000);
+        const minutes = Math.floor((remaining % 3600000) / 60000);
+        return `Sign Control Expires In: ${hours}h ${minutes}m`;
+      }
+
+      function startCountdown(expiresAt) {
+        currentExpiresAt = expiresAt || null;
+        if (countdownTimer) window.clearInterval(countdownTimer);
+        countdownValue.textContent = formatCountdown(currentExpiresAt);
+        countdownTimer = window.setInterval(() => {
+          countdownValue.textContent = formatCountdown(currentExpiresAt);
+        }, 1000);
+      }
+
+      function renderTransactions(transactions) {
+        if (!transactions || transactions.length === 0) {
+          feedList.innerHTML = '<div class="feed-item"><span>No confirmed transactions yet — the first donor writes the opening block.</span><span class="feed-time">Awaiting signal</span></div>';
+          return;
+        }
+
+        feedList.innerHTML = transactions.map((transaction) => {
+          const when = transaction.confirmed_at ? new Date(transaction.confirmed_at).toLocaleString() : 'Pending';
+          const crown = transaction.won_throne ? ' • took the throne' : '';
+          return `<div class="feed-item"><span>${transaction.alias} — ${transaction.amount_btc} BTC${crown}</span><span class="feed-time">${when}</span></div>`;
+        }).join('');
+      }
+
+      function applyPublicState(state) {
+        const throne = state?.throne || {};
+        const alias = throne.alias || 'None yet';
+        const amountBtc = throne.amount_btc || '0.00000000';
+        const walletShort = throne.wallet_short || '—';
+
+        throneTitle.textContent = alias === 'None yet' ? 'Awaiting the first sovereign' : alias;
+        throneWallet.textContent = `Wallet: ${walletShort}`;
+        sovereignName.textContent = alias;
+        sovereignAmount.textContent = `${amountBtc} BTC`;
+        throneMeta.innerHTML = `Amount: ${amountBtc} BTC<br />Reward: public throne, sign control, founding status`;
+        treasuryValue.textContent = `${state?.treasury_btc || '0.00000000'} BTC`;
+        currentMessage.textContent = throne.message || DEFAULT_MESSAGE;
+        countdownNote.textContent = throne.expires_at ? 'The throne is temporary. The screenshot lasts forever.' : 'The countdown begins with the first confirmed sovereign.';
+        startCountdown(throne.expires_at || null);
+        renderTransactions(state?.transactions || []);
+      }
+
+      async function fetchJson(url, options) {
+        const response = await fetch(url, options);
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(payload.error || 'Request failed');
+        }
+        return payload;
+      }
+
+      async function refreshPublicState() {
+        try {
+          const state = await fetchJson(`${API_BASE}/public-state`);
+          applyPublicState(state);
+        } catch (error) {
+          statusNote.textContent = 'Automatic throne system is not connected yet. Static fallback remains visible.';
+        }
+      }
+
+      function revealClaimResult(address) {
+        claimResult.hidden = false;
+        walletAddress.value = address;
+        qrCodeImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=304x304&data=${encodeURIComponent(`bitcoin:${address}`)}`;
+      }
+
+      function beginClaimPolling(claimId) {
+        currentClaimId = claimId;
+        if (claimStatusTimer) window.clearInterval(claimStatusTimer);
+
+        claimStatusTimer = window.setInterval(async () => {
+          if (!currentClaimId) return;
+          try {
+            const claim = await fetchJson(`${API_BASE}/claim-status?claim_id=${encodeURIComponent(currentClaimId)}`);
+            if (claim.status === 'confirmed') {
+              statusNote.textContent = `Confirmed: ${claim.amount_btc} BTC. The throne has updated.`;
+              walletNote.textContent = 'Confirmed claims update the throne automatically.';
+              window.clearInterval(claimStatusTimer);
+              claimStatusTimer = null;
+              await refreshPublicState();
+            } else if (claim.status === 'seen') {
+              statusNote.textContent = 'Payment seen on-chain. Waiting for confirmation.';
+            } else {
+              statusNote.textContent = 'Waiting for payment to hit the chain.';
+            }
+          } catch (error) {
+            statusNote.textContent = 'Claim created. Polling will resume when the backend is reachable.';
+          }
+        }, 20000);
+      }
+
+      fundButton.addEventListener('click', () => {
+        walletPanel.classList.add('visible');
+        walletPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+
+      scrollButton.addEventListener('click', () => {
+        leaderboard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
+      claimForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        claimSubmitButton.disabled = true;
+        statusNote.textContent = 'Generating your unique BTC address…';
+
+        try {
+          const payload = await fetchJson(`${API_BASE}/create-claim`, {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+              alias: aliasInput.value.trim(),
+              message: messageInput.value.trim()
+            })
+          });
+
+          revealClaimResult(payload.address);
+          walletNote.textContent = 'Send BTC to this exact address. The throne updates after confirmation.';
+          statusNote.textContent = 'Address ready. Send BTC to claim the throne.';
+          beginClaimPolling(payload.claim_id);
+        } catch (error) {
+          statusNote.textContent = error.message || 'Unable to create claim right now.';
+        } finally {
+          claimSubmitButton.disabled = false;
+        }
+      });
+
+      copyButton.addEventListener('click', async () => {
+        const address = walletAddress.value.trim();
+        if (!address) return;
+        walletAddress.focus();
+        walletAddress.select();
+        walletAddress.setSelectionRange(0, walletAddress.value.length);
+
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(address);
+          } else if (!document.execCommand('copy')) {
+            throw new Error('copy command unavailable');
+          }
+          copyButton.textContent = 'Copied';
+          statusNote.textContent = 'Address copied. Now send BTC to take the throne.';
+        } catch (error) {
+          statusNote.textContent = 'Address highlighted. Press ⌘/Ctrl + C to complete the ritual.';
+        }
+
+        window.setTimeout(() => {
+          copyButton.textContent = 'Copy Address';
+        }, 1800);
+      });
+
+      assetLinks.forEach((link) => {
+        link.addEventListener('click', (event) => {
+          event.preventDefault();
+          downloadAsset(link.dataset.asset);
+        });
+      });
+
+      refreshPublicState();
+      window.setInterval(refreshPublicState, 30000);
+    </script>
+  </body>
+</html>
