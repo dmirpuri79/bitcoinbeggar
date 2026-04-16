@@ -8,6 +8,12 @@
       name="description"
       content="The world's first Bitcoin Beggar. Fund the beggar, compete for top donor, and control the sign for 24 hours."
     />
+    <script>
+      if (window.location.hostname === 'btcbeggar.com' || window.location.hostname === 'www.btcbeggar.com') {
+        const target = `https://bitcoinbeggar.com${window.location.pathname}${window.location.search}${window.location.hash}`;
+        window.location.replace(target);
+      }
+    </script>
     <style>
       :root {
         --bg: #050505;
@@ -167,6 +173,76 @@
         border-radius: var(--radius-lg);
         border: 1px solid rgba(255,255,255,0.08);
         background: rgba(255,255,255,0.04);
+      }
+
+      .side-stack {
+        display: grid;
+        gap: 16px;
+      }
+
+      .artifact-card {
+        padding: 20px;
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(255,255,255,0.08);
+        background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.035));
+        text-align: left;
+      }
+
+      .artifact-label {
+        display: block;
+        font-size: 0.78rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.56);
+      }
+
+      .artifact-headline {
+        margin-top: 10px;
+        font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+        letter-spacing: -0.04em;
+      }
+
+      .artifact-copy {
+        margin-top: 10px;
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .artifact-stats {
+        margin-top: 18px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .artifact-stat {
+        padding: 14px;
+        border-radius: 16px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .artifact-stat-label {
+        display: block;
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.46);
+      }
+
+      .artifact-stat-value {
+        display: block;
+        margin-top: 8px;
+        font-size: 1.15rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+      }
+
+      .artifact-legend {
+        margin-top: 14px;
+        color: rgba(255,255,255,0.78);
+        font-size: 0.94rem;
+        line-height: 1.6;
       }
 
       .throne-card {
@@ -397,6 +473,12 @@
         color: rgba(255,255,255,0.84);
       }
 
+      .manifesto-support {
+        margin-top: 10px;
+        color: rgba(255,255,255,0.56);
+        font-size: 0.94rem;
+      }
+
       .countdown-card,
       .feed-card {
         padding: 24px 26px;
@@ -492,6 +574,35 @@
       .proof-copy {
         max-width: 760px;
         margin: 14px auto 0;
+      }
+
+      .artifact-rules {
+        margin-top: 18px;
+        display: grid;
+        gap: 12px;
+        text-align: left;
+      }
+
+      .artifact-rule {
+        padding: 16px 18px;
+        border-radius: 18px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .artifact-rule strong {
+        display: block;
+        font-size: 0.84rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.58);
+      }
+
+      .artifact-rule span {
+        display: block;
+        margin-top: 8px;
+        color: rgba(255,255,255,0.86);
+        line-height: 1.65;
       }
 
       .evidence-block {
@@ -621,6 +732,10 @@
           grid-template-columns: 1fr;
         }
 
+        .artifact-stats {
+          grid-template-columns: 1fr;
+        }
+
         .page {
           width: min(calc(100% - 20px), var(--max-width));
           padding-top: 14px;
@@ -680,9 +795,9 @@
     <main class="page">
       <section class="hero">
         <div class="hero-panel">
-          <div class="eyebrow">Bitcoin Beggar • Public Art for Bitcoin Maximalists</div>
+          <div class="eyebrow">Bitcoin Beggar • Bitcoin-native status artifact</div>
           <h1>The World’s First Bitcoin Beggar</h1>
-          <p class="subtext">A clean, shameless public experiment to collect 21 BTC before the next bull run — and crown the donor with the most taste, conviction, and audacity.</p>
+          <p class="subtext">Not charity. Not a token. Not crowdfunding. A live Bitcoin status game where the biggest donor takes the throne, controls the sign for 24 hours, and earns visible early status inside a public artifact.</p>
 
           <div class="hero-grid">
             <div class="throne-card" id="leaderboard">
@@ -706,19 +821,42 @@
               </div>
             </div>
 
-            <div>
+            <div class="side-stack">
               <div class="counter" aria-label="bitcoin treasury">
                 <span class="counter-label">The Treasury</span>
                 <span class="counter-value" id="treasuryValue">0.00000000 BTC</span>
               </div>
 
+              <div class="artifact-card" aria-label="artifact ledger">
+                <span class="artifact-label">Genesis Ledger</span>
+                <div class="artifact-headline">210 founding slots. Public. Finite. Early.</div>
+                <p class="artifact-copy">This page is turning into a public Bitcoin artifact. Early donors do not just send money. They lock in a founding place, move the treasury, and make every later donor visibly later.</p>
+                <div class="artifact-stats">
+                  <div class="artifact-stat">
+                    <span class="artifact-stat-label">Genesis slots</span>
+                    <span class="artifact-stat-value" id="slotCount">210</span>
+                  </div>
+                  <div class="artifact-stat">
+                    <span class="artifact-stat-label">Claimed</span>
+                    <span class="artifact-stat-value" id="claimedCount">0</span>
+                  </div>
+                  <div class="artifact-stat">
+                    <span class="artifact-stat-label">Remaining</span>
+                    <span class="artifact-stat-value" id="remainingCount">210</span>
+                  </div>
+                </div>
+                <div class="artifact-legend" id="artifactLegend">The first confirmed donor writes the opening block. Every confirmed donor after that becomes part of the proof that this strange thing was real.</div>
+              </div>
+
               <div class="value-strip" aria-label="why donate">
                 <div class="value-pill">Public donor prestige</div>
                 <div class="value-pill">24h sign control</div>
+                <div class="value-pill">Scarce founding status</div>
                 <div class="value-pill">A live on-chain artifact of value, ego, and Bitcoin</div>
               </div>
 
-              <p class="manifesto-line">Some call it absurd. Others understand.</p>
+              <p class="manifesto-line">Absurd enough to spread. Real enough to count.</p>
+              <p class="manifesto-support">The best internet objects sit between joke, ledger, and social proof.</p>
             </div>
           </div>
 
@@ -773,9 +911,23 @@
           </div>
         </section>
 
-        <section class="section-card">
+        <section class="section-card" id="proofSection">
           <h2>Proof / Transparency</h2>
           <p class="proof-copy">All transactions are public. No token. No whitelist. No fake utility. Just a beautifully honest Bitcoin object that rewards the boldest backer with visible status.</p>
+          <div class="artifact-rules">
+            <div class="artifact-rule">
+              <strong>Rule 01</strong>
+              <span>The highest confirmed donor takes the throne and controls the sign for 24 hours.</span>
+            </div>
+            <div class="artifact-rule">
+              <strong>Rule 02</strong>
+              <span>Every confirmed donor becomes part of the public ledger. As the ledger fills, the artifact gets harder to ignore.</span>
+            </div>
+            <div class="artifact-rule">
+              <strong>Rule 03</strong>
+              <span>The point is not pity. The point is visible proof: value, taste, timing, ego, and Bitcoin in one frame.</span>
+            </div>
+          </div>
         </section>
 
         <section class="evidence-block" aria-label="For Those Who Backed It">
@@ -794,6 +946,7 @@
         <script>
       const API_BASE = '/api';
       const DEFAULT_MESSAGE = 'The sign belongs to whoever makes this impossible to ignore.';
+      const GENESIS_SLOT_COUNT = 210;
       const fundButton = document.getElementById('fundButton');
       const scrollButton = document.getElementById('scrollButton');
       const walletPanel = document.getElementById('walletPanel');
@@ -808,6 +961,7 @@
       const walletNote = document.getElementById('walletNote');
       const statusNote = document.getElementById('statusNote');
       const leaderboard = document.getElementById('leaderboard');
+      const proofSection = document.getElementById('proofSection');
       const currentMessage = document.getElementById('currentMessage');
       const assetLinks = document.querySelectorAll('[data-asset]');
       const throneTitle = document.getElementById('throneTitle');
@@ -816,6 +970,10 @@
       const sovereignAmount = document.getElementById('sovereignAmount');
       const throneMeta = document.getElementById('throneMeta');
       const treasuryValue = document.getElementById('treasuryValue');
+      const slotCount = document.getElementById('slotCount');
+      const claimedCount = document.getElementById('claimedCount');
+      const remainingCount = document.getElementById('remainingCount');
+      const artifactLegend = document.getElementById('artifactLegend');
       const countdownValue = document.getElementById('countdownValue');
       const countdownNote = document.getElementById('countdownNote');
       const feedList = document.getElementById('feedList');
@@ -934,8 +1092,29 @@
         }).join('');
       }
 
+      function updateArtifactStats(transactions = []) {
+        const claimed = Math.min(transactions.length, GENESIS_SLOT_COUNT);
+        const remaining = Math.max(GENESIS_SLOT_COUNT - claimed, 0);
+        slotCount.textContent = `${GENESIS_SLOT_COUNT}`;
+        claimedCount.textContent = `${claimed}`;
+        remainingCount.textContent = `${remaining}`;
+
+        if (claimed === 0) {
+          artifactLegend.textContent = 'The first confirmed donor writes the opening block. Every confirmed donor after that becomes part of the proof that this strange thing was real.';
+          return;
+        }
+
+        if (remaining === 0) {
+          artifactLegend.textContent = 'The genesis ledger is full. What remains is rank, screenshots, and whether you were early enough to matter.';
+          return;
+        }
+
+        artifactLegend.textContent = `${claimed} confirmed donor${claimed === 1 ? '' : 's'} already made this real. ${remaining} founding slot${remaining === 1 ? '' : 's'} remain.`;
+      }
+
       function applyPublicState(state) {
         const throne = state?.throne || {};
+        const transactions = state?.transactions || [];
         const alias = throne.alias || 'None yet';
         const amountBtc = throne.amount_btc || '0.00000000';
         const walletShort = throne.wallet_short || '—';
@@ -949,7 +1128,8 @@
         currentMessage.textContent = throne.message || DEFAULT_MESSAGE;
         countdownNote.textContent = throne.expires_at ? 'The throne is temporary. The screenshot lasts forever.' : 'The countdown begins with the first confirmed sovereign.';
         startCountdown(throne.expires_at || null);
-        renderTransactions(state?.transactions || []);
+        renderTransactions(transactions);
+        updateArtifactStats(transactions);
       }
 
       async function fetchJson(url, options) {
@@ -1007,7 +1187,7 @@
       });
 
       scrollButton.addEventListener('click', () => {
-        leaderboard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        proofSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
 
       claimForm.addEventListener('submit', async (event) => {
