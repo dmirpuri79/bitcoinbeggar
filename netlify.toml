@@ -2,6 +2,10 @@
   publish = "."
   functions = "netlify/functions"
 
+[functions]
+  external_node_modules = ["tiny-secp256k1"]
+  included_files = ["node_modules/tiny-secp256k1/lib/secp256k1.wasm"]
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
