@@ -10,6 +10,7 @@ describe('public state mapping', () => {
         current_sats: 5100000,
         treasury_sats: 7600000,
         throne_expires_at: '2026-04-17T01:00:00.000Z',
+        time_remaining_ms: 3600000,
         current_address: 'bc1qnewer'
       },
       transactions: [
@@ -26,6 +27,7 @@ describe('public state mapping', () => {
     expect(state.throne.alias).toBe('Sovereign');
     expect(state.throne.amount_btc).toBe('0.05100000');
     expect(state.throne.wallet_short).toBe('bc1qne...ewer');
+    expect(state.throne.time_remaining_ms).toBe(3600000);
     expect(state.treasury_btc).toBe('0.07600000');
     expect(state.transactions[0]).toMatchObject({
       alias: 'Sovereign',

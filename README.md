@@ -28,8 +28,9 @@ Optional:
 - `BITCOIN_NETWORK=mainnet`
 
 ### 2. Supabase project (required)
-Create a Supabase project and run:
-- `supabase/migrations/2026-04-16_bitcoinbeggar_throne.sql`
+Create a Supabase project and run the tracked timestamped migrations in `supabase/migrations/`, including:
+- `supabase/migrations/20260416000100_bitcoinbeggar_throne.sql`
+- `supabase/migrations/20260416000200_add_time_remaining_ms_to_throne_state.sql`
 
 Required env vars:
 - `SUPABASE_URL`
