@@ -67,9 +67,9 @@ npm test
 - scheduled function: `check-payments` every 2 minutes
 
 ## Remaining blockers on this machine right now
-- no production `BITCOIN_XPUB` exists yet
-- GitHub CLI is not installed/authenticated locally
-- Supabase project/env values have not been captured into the app yet
+- `BITCOIN_XPUB` is now available locally via `.env`
+- Supabase is linked and schema migrations were applied
+- GitHub CLI is authenticated locally
 - Netlify CLI is not logged in locally
 
 Once those are available, finish by:
